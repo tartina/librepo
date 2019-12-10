@@ -360,6 +360,15 @@ lr_fastestmirror_prepare(LrHandle *handle,
             break;
         }
 
+        curlcode = curl_easy_setopt(curlh, CURLOPT_SSLVERSION, CURL_SSLVERSION_MAX_TLSv1_2);
+        if (curlcode != CURLE_OK) {
+            g_set_error(err, LR_FASTESTMIRROR_ERROR, LRE_CURL,
+                        "curl_easy_setopt(_, CURLOPT_SSLVERSION, %s) failed: %s",
+                        url, curl_easy_strerror(curlcode));
+            ret = FALSE;
+            break;
+        }
+
         curlcode = curl_easy_setopt(curlh, CURLOPT_CONNECT_ONLY, 1);
         if (curlcode != CURLE_OK) {
             g_set_error(err, LR_FASTESTMIRROR_ERROR, LRE_CURL,

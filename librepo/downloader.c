@@ -1488,6 +1488,15 @@ prepare_next_transfer(LrDownload *dd, gboolean *candidatefound, GError **err)
         goto fail;
     }
 
+    // Set TLS
+    c_rc = curl_easy_setopt(h, CURLOPT_SSLVERSION, CURL_SSLVERSION_MAX_TLSv1_2);
+    if (c_rc != CURLE_OK) {
+        g_set_error(err, LR_DOWNLOADER_ERROR, LRE_CURL,
+                    "curl_easy_setopt(h, CURLOPT_SSLVERSION, %s) failed: %s",
+                    full_url, curl_easy_strerror(c_rc));
+        goto fail;
+    }
+
     // Set error buffer
     target->errorbuffer[0] = '\0';
     c_rc = curl_easy_setopt(h, CURLOPT_ERRORBUFFER, target->errorbuffer);
